@@ -6,22 +6,30 @@ import datetime
 from .models import ProductCategory, Product
 
 
+def get_current_basket(current_user):
+    if current_user.is_authenticated:
+        items = Basket.objects.filter(user=current_user)
+    else:
+        items = None
+
+    return items
+
+
 def main(request: HttpRequest):
     title = 'главная'
 
     products = Product.objects.all()
 
-
     return render(request, 'mainapp/index.html', {
         'title': title,
         'products': products,
+        'basket': get_current_basket(request.user)
     })
 
 
 def products(request: HttpRequest, id=None):
     title = 'продукты'
     links_menu = ProductCategory.objects.all()
-    basket = Basket.objects.filter(user=request.user)
 
     if id is not None:
         same_products = Product.objects.filter(category__pk=id)
@@ -32,13 +40,13 @@ def products(request: HttpRequest, id=None):
         'title': title,
         'links_menu': links_menu,
         'same_products': same_products,
-        'basket': basket
+        'basket': get_current_basket(request.user)
     })
 
 
 def product_detail(request: HttpRequest, id=None):
     # if id is not None:
-        # item = Product.objects.get(pk=id)
+    # item = Product.objects.get(pk=id)
     item = get_object_or_404(Product, pk=id)
     same_products = Product.objects.exclude(pk=id).filter(category__pk=item.category_id)
     links_menu = ProductCategory.objects.all()
@@ -48,6 +56,7 @@ def product_detail(request: HttpRequest, id=None):
         'item': item,
         'products': same_products,
         'links_menu': links_menu,
+        'basket': get_current_basket(request.user)
     }
 
     return render(request, 'mainapp/details.html', context)
