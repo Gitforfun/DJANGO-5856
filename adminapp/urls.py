@@ -1,28 +1,22 @@
 from django.urls import path
-
-from adminapp.views import users, categories, products
+from adminapp.views import categories, products, users
 
 app_name = 'adminapp'
 
 urlpatterns = [
-    # users (create, read, update, delete)
-    path('users/index', users.index, name='users'),
-    path('users/create/', users.create, name='user_create'),  # admin:user_create
-    path('users/read/<int:id>', users.read, name='user_read'),
-    path('users/update/<int:id>', users.update, name='user_update'),
-    path('users/delete/<int:id>', users.delete, name='user_delete'),
+    path('users/create/', users.user_create, name='user_create'),
+    path('users/read/', users.users, name='users'),
+    path('users/update/<int:pk>/', users.user_update, name='user_update'),
+    path('users/delete/<int:pk>/', users.user_delete, name='user_delete'),
 
-    # categories (CRUD)
-    path('categories/index', categories.index, name='categories'),
-    path('categories/create/', categories.create, name='category_create'),
-    path('categories/read/<int:id>', categories.read, name='category_read'),
-    path('categories/update/<int:id>', categories.update, name='category_update'),
-    path('categories/delete/<int:id>', categories.delete, name='category_delete'),
+    path('categories/create/', categories.category_create, name='category_create'),
+    path('categories/read/', categories.categories, name='categories'),
+    path('categories/update/<int:pk>/', categories.category_update, name='category_update'),
+    path('categories/delete/<int:pk>/', categories.category_delete, name='category_delete'),
 
-    # products (CRUD, list_by_category)
-    path('products/create/', products.create, name='product_create'),
-    path('products/read/<int:id>', products.read, name='product_read'),
-    path('products/list/<int:category>', products.list_by_category, name='product_category'),
-    path('products/update/<int:id>', products.update, name='product_update'),
-    path('products/delete/<int:id>', products.delete, name='product_delete'),
+    path('products/create/category/<int:pk>/', products.product_create, name='product_create'),
+    path('products/read/category/<int:pk>/', products.products, name='products'),
+    path('products/read/<int:pk>/', products.product_read, name='product_read'),
+    path('products/update/<int:pk>/', products.product_update, name='product_update'),
+    path('products/delete/<int:pk>/', products.product_delete, name='product_delete'),
 ]

@@ -364,8 +364,7 @@ html, body {
 
 .admin_menu {
     display: block;
-    left: 15px;
-    top: 20px;
+    margin: 20px auto;
     height: 40px;
     width: 100%;
 }
@@ -373,7 +372,6 @@ html, body {
 .admin_menu ul.menu{
     display: block;
     float: none;
-    width: 550px;
     height: 50px;
     margin: auto;
     color: #555;
