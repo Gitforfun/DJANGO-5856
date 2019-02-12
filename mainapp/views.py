@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest, HttpResponse
 from basketapp.models import Basket
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import datetime
 from .models import ProductCategory, Product
@@ -27,7 +28,7 @@ def main(request: HttpRequest):
     })
 
 
-def products(request: HttpRequest, id=None):
+def products(request: HttpRequest, id=None, page=1):
     title = 'продукты'
     links_menu = ProductCategory.objects.all()
 
@@ -36,10 +37,22 @@ def products(request: HttpRequest, id=None):
     else:
         same_products = Product.objects.all()
 
+    provider = Paginator(same_products, 2)
+
+    try:
+        products_provider = provider.page(page)
+    except PageNotAnInteger:
+        products_provider = provider.page(1)
+    except EmptyPage:
+        products_provider = provider.page(provider.num_pages)
+
+    # if request.is_ajax():
+    #     return JsonResponse(products_provider)
+
     return render(request, 'mainapp/products.html', {
         'title': title,
         'links_menu': links_menu,
-        'same_products': same_products,
+        'provider': products_provider,
         'basket': get_current_basket(request.user)
     })
 
